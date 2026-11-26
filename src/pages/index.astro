@@ -1,53 +1,31 @@
 ﻿---
-import { getCollection } from 'astro:content';
 import '../styles/global.css';
-
-const projects = await getCollection('projects');
 ---
 
 <html lang="ru">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width" />
-<title>Мои проекты | Портфолио</title>
-</head>
-<body class="bg-zinc-950 text-zinc-50 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>������� | ��� ����䮫��</title>
+	</head>
+	<body class="bg-zinc-950 text-zinc-50 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+		
+		<main class="flex-grow flex flex-col items-center justify-center px-6 text-center">
+			<h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+				�ਢ��, � <span class="text-purple-400">���ࠡ��稪</span>
+			</h1>
+			<p class="text-zinc-400 text-lg md:text-xl max-w-2xl mb-12">
+				���� ���������� � ��� ����䮫��. ����� ᮡ࠭� ��� ���訥 ࠡ���, ��ᯥਬ���� � ������� �஥���.
+			</p>
+			
+			<a href="/projects" class="bg-purple-600 hover:bg-purple-500 text-white font-medium py-4 px-10 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]">
+				��३� � �஥�⠬
+			</a>
+		</main>
 
-<header class="max-w-4xl mx-auto pt-20 pb-12 px-6 w-full">
-<h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Мое Портфолио</h1>
-<p class="text-zinc-400 text-lg max-w-2xl">
-Привет! Меня зовут [Ваше Имя]. Здесь я собираю свои лучшие проекты в области разработки, дизайна и игровых модов. 
-Изучите мои работы ниже или свяжитесь со мной для сотрудничества.
-</p>
-</header>
+		<footer class="border-t border-zinc-800 py-8 text-center text-zinc-500 text-sm w-full">
+			<p>&copy; 2026 ��� ����䮫��. ������� �� Astro.</p>
+		</footer>
 
-<main class="max-w-4xl mx-auto px-6 pb-24 w-full flex-grow">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-{projects.map((project) => (
-<a href={/projects/} class="group flex flex-col p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/50 transition-all duration-300">
-<h2 class="text-2xl font-semibold mb-2 group-hover:text-purple-400 transition-colors">
-{project.data.title}
-</h2>
-<p class="text-zinc-400 mb-4 flex-grow">
-{project.data.description}
-</p>
-{project.data.tags && (
-<div class="flex flex-wrap gap-2 mt-auto">
-{project.data.tags.map(tag => (
-<span class="text-xs px-2 py-1 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700">
-{tag}
-</span>
-))}
-</div>
-)}
-</a>
-))}
-</div>
-</main>
-
-<footer class="border-t border-zinc-800 py-8 text-center text-zinc-500 text-sm w-full">
-<p>&copy; 2026 Мое Портфолио. Сделано на Astro.</p>
-</footer>
-
-</body>
+	</body>
 </html>
