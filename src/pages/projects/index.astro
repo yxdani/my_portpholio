@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 
@@ -24,7 +24,7 @@ const projects = (await getCollection('projects')).filter(p => !p.data.private);
 <main class="max-w-4xl mx-auto px-6 pb-12 w-full flex-grow">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 {projects.map((project) => (
-<a href={/projects/} class="group flex flex-col p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/50 transition-all duration-300">
+<a href={`/projects/${project.id}`} class="group flex flex-col p-6 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/50 transition-all duration-300">
 <h2 class="text-2xl font-semibold mb-2 group-hover:text-purple-400 transition-colors">
 {project.data.title}
 </h2>
@@ -41,9 +41,12 @@ const projects = (await getCollection('projects')).filter(p => !p.data.private);
 </div>
 </main>
 
-<div class="max-w-4xl mx-auto px-6 pb-24 w-full">
+<div class="max-w-4xl mx-auto px-6 pb-24 w-full flex flex-wrap gap-4">
 <a href="/secret" class="inline-block bg-zinc-900 hover:bg-zinc-800 border border-red-500/30 hover:border-red-500/80 text-red-400 font-medium py-3 px-8 rounded-lg transition-all duration-300">
 🔒 Закрытые проекты
+</a>
+<a href="/files" class="inline-block bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300">
+📁 Файлы
 </a>
 </div>
 

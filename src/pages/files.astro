@@ -1,0 +1,128 @@
+---
+import '../styles/global.css';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const filesDir = path.join(process.cwd(), 'public', 'files');
+let files: { name: string; size: number }[] = [];
+try {
+  files = fs.readdirSync(filesDir)
+    .filter(f => !f.startsWith('.'))
+    .map(f => {
+      const stat = fs.statSync(path.join(filesDir, f));
+      return { name: f, size: stat.size };
+    });
+} catch {
+  files = [];
+}
+
+function formatSize(bytes: number) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function getDescription(filename: string) {
+  if (filename.includes('salary')) return 'Скрипт для расчёта заработной платы и формирования отчётов.';
+  if (filename.includes('ezzer')) return 'Утилита для работы с файлами и быстрой очистки системы.';
+  if (filename.includes('VibesClient')) return 'Клиент для подключения к сервису Vibes. Версия 3.3.0.';
+  return 'Файл для скачивания.';
+}
+---
+
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Файлы | Мое Портфолио</title>
+</head>
+<body class="bg-zinc-950 text-zinc-50 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+
+<header class="max-w-4xl mx-auto pt-20 pb-12 px-6 w-full">
+<a href="/projects" class="text-sm text-zinc-500 hover:text-purple-400 mb-6 inline-block transition-colors">
+&larr; К проектам
+</a>
+<h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Файлы</h1>
+<p class="text-zinc-400 text-lg">Скачайте нужный файл или перетащите новый в зону ниже.</p>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 pb-24 w-full flex-grow space-y-8">
+
+<div id="dropzone" class="border-2 border-dashed border-zinc-700 hover:border-purple-500 rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer bg-zinc-900/50">
+<p class="text-zinc-400 text-lg mb-2">Перетащите файл сюда</p>
+<p class="text-zinc-500 text-sm">или нажмите, чтобы выбрать</p>
+<input type="file" id="file-input" class="hidden" multiple />
+<p id="status" class="text-purple-400 mt-4 text-sm"></p>
+</div>
+
+<div>
+<h2 class="text-2xl font-semibold mb-4">Доступные файлы</h2>
+{files.length === 0 ? (
+<p class="text-zinc-500">Пока файлов нет. Положите их в папку <code class="text-purple-400">public/files/</code>.</p>
+) : (
+<div class="grid grid-cols-1 gap-4">
+{files.map(file => (
+<a href={`/files/${file.name}`} download class="group flex items-center justify-between p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 hover:bg-zinc-800/50 transition-all duration-300">
+<div class="min-w-0 pr-4">
+<p class="font-medium truncate">{file.name}</p>
+<p class="text-sm text-zinc-400 mt-1 truncate">{getDescription(file.name)}</p>
+<p class="text-xs text-zinc-600 mt-1">{formatSize(file.size)}</p>
+</div>
+<span class="text-purple-400 text-sm font-medium group-hover:underline flex-shrink-0">Скачать ↓</span>
+</a>
+))}
+</div>
+)}
+</div>
+
+</main>
+
+<footer class="border-t border-zinc-800 py-8 text-center text-zinc-500 text-sm w-full">
+<p>&copy; 2026 Мое Портфолио. Сделано на Astro.</p>
+</footer>
+
+<script is:inline>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
+const status = document.getElementById('status');
+
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+['dragenter', 'dragover'].forEach(evt => {
+dropzone.addEventListener(evt, (e) => {
+e.preventDefault();
+dropzone.classList.add('border-purple-500', 'bg-purple-500/10');
+});
+});
+['dragleave', 'drop'].forEach(evt => {
+dropzone.addEventListener(evt, (e) => {
+e.preventDefault();
+dropzone.classList.remove('border-purple-500', 'bg-purple-500/10');
+});
+});
+dropzone.addEventListener('drop', (e) => {
+e.preventDefault();
+handleFiles(e.dataTransfer.files);
+});
+
+async function handleFiles(fileList) {
+if (!fileList || fileList.length === 0) return;
+status.textContent = 'Загрузка...';
+
+const formData = new FormData();
+for (const file of fileList) formData.append('files', file);
+
+try {
+const res = await fetch('/api/upload', { method: 'POST', body: formData });
+if (!res.ok) throw new Error('no-server');
+status.textContent = '✅ Файлы загружены! Обновите страницу.';
+setTimeout(() => location.reload(), 1000);
+} catch {
+status.textContent = '⚠️ На Vercel загрузка недоступна. Положите файлы в public/files/ и сделайте git push.';
+}
+}
+</script>
+
+</body>
+</html>
