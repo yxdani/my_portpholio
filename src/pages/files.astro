@@ -23,9 +23,10 @@ function formatSize(bytes: number) {
 }
 
 function getDescription(filename: string) {
-  if (filename.includes('salary')) return 'Скрипт для расчёта заработной платы и формирования отчётов.';
-  if (filename.includes('ezzer')) return 'Утилита для работы с файлами и быстрой очистки системы.';
-  if (filename.includes('VibesClient')) return 'Клиент для подключения к сервису Vibes. Версия 3.3.0.';
+  const lower = filename.toLowerCase();
+  if (lower.includes('vibes')) return 'Визуальный клиент для работы с сервисом Vibes.';
+  if (lower.includes('salary')) return 'Приложение для создания локеров.';
+  if (lower.includes('ezzer')) return 'Макрос для записывания команд.';
   return 'Файл для скачивания.';
 }
 ---

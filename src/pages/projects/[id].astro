@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection, render } from 'astro:content';
 import '../../styles/global.css';
 
@@ -29,12 +29,6 @@ const { Content } = await render(project);
 
 <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6">{project.data.title}</h1>
 <p class="text-xl text-zinc-400 mb-8">{project.data.description}</p>
-
-{project.data.link && (
-<a href={project.data.link} target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 px-6 rounded-lg transition-colors mb-12">
-Открыть проект
-</a>
-)}
 
 <article class="prose prose-invert prose-purple max-w-none">
 <Content />
